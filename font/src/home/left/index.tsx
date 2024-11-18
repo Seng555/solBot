@@ -1,13 +1,48 @@
-import React from 'react';
-import { Box, Button, Divider, Grid, IconButton, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Button, CircularProgress, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { PaidOutlined, PlayArrow, YouTube } from '@mui/icons-material';
 import SettingComponent from './seting';
 import { Telegram } from '@mui/icons-material';
 import { useLogs } from '../../Context/LogsContext';
+import socket from '../../socket/socket';
 
 const Leftcomponent: React.FC = () => {
-    const {addLog } = useLogs(); // Access the logs state and methods
-    const addLogs = async (mss:string) => addLog(mss);
+    const [starting, setStart] = useState(false);
+    const { addLog } = useLogs(); // Access the logs state and methods
+    const addLogs = async (mss: string) => addLog(mss);
+
+    const start = async () => {
+        try {
+            setStart(true)
+            addLogs("Bot started successfully!")
+            socket.emit("start")
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+        socket.on('smg', ({ msg, type }: { msg: string | object, type?: number }) => {
+            console.log(type);
+
+            // Check if msg is an object before using Object.entries
+            if (typeof msg === 'object' && msg !== null) {
+                // Iterate over the object and log each key-value pair
+                Object.entries(msg).forEach(([key, value]) => {
+                    addLog(`${key}: ${value}`);
+                });
+            } else if (typeof msg === 'string') {
+                // If msg is a string, log it directly
+                addLog(msg);
+            }
+        });
+        return () => {
+            socket.off('message');
+        };
+    }, []);
     return (
         <Grid item xs={12} md={4}>
             <Box sx={{ padding: 1 }}>
@@ -19,11 +54,10 @@ const Leftcomponent: React.FC = () => {
                         </Typography>
                     </Box>
                     <Box>
-                    <Button variant="contained" endIcon={<PlayArrow />} onClick={()=>addLogs("Bot started successfully!")}>
-                        RUN SNIPER
-                    </Button>
+                        <Button disabled={starting} variant="contained" endIcon={starting ? <CircularProgress size={20} color='warning' /> : <PlayArrow />} onClick={start}>
+                            RUN SNIPER
+                        </Button>
                     </Box>
-                    
                 </Box>
                 <Box sx={{ mt: 5 }}>
                     To use the sniper, please wrap your SOL as we will be using

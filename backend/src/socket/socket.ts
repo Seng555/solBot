@@ -27,12 +27,12 @@ export const socketSetup = async (server: Server<typeof IncomingMessage, typeof 
         socket.on("disconnect", () => {
             console.log(`Client disconnected: ${socket.id}`);
         });
-        socket.on("start", ({id}) => {
-             console.log(`Start ${id}` );
+        socket.on("start", () => {
+            // console.log(`Start ${id}` );
              subscribeToProgramAccount(connection)
         });
-        socket.on("stop", ({id}) => {
-            console.log(`stopSub ${id}` );
+        socket.on("stop", () => {
+            console.log(`stopSub` );
             stopSub(connection)
        });
         socket.on('sniper', (data: formInfo) => {

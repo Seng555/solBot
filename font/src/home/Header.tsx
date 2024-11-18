@@ -56,11 +56,6 @@ const Header: React.FC = () => {
     } // Cleanup on unmount
   }, []);
 
-
-
-
-  console.log(price);
-
   return (
     <AppBar position="static">
       <Toolbar>
@@ -94,17 +89,12 @@ const Header: React.FC = () => {
               <Menu />
             </IconButton>
             <Drawer anchor="right" open={isDrawerOpen} onClose={toggleDrawer(false)}>
-              <Box
-                sx={{ width: 250 }}
-                role="presentation"
-                onClick={toggleDrawer(false)}
-                onKeyDown={toggleDrawer(false)}
-              >
+              <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
                 <List>
                   {/* Support Link */}
                   <ListItem component="a" target="_blank" href="https://t.me/web3prodev">
                     <ListItemIcon>
-                      <ContactSupport sx={{ color: 'inherit' }} /> {/* Icon added here */}
+                      <ContactSupport sx={{ color: 'inherit' }} />
                     </ListItemIcon>
                     <ListItemText primary="Contact support" />
                   </ListItem>
@@ -206,9 +196,7 @@ const Header: React.FC = () => {
                   gap: 1,
                 }}
               >
-                {/* Support Icon */}
                 <ContactSupport sx={{ color: 'white', fontSize: 18 }} /> {/* Icon inside button */}
-
                 <Typography
                   variant="body1"
                   sx={{
